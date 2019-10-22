@@ -1,0 +1,58 @@
+body {
+    overflow-x: hidden;
+    margin: 0px;
+    padding: 0px;
+}
+
+.container {
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.banner {
+    display: block;
+    margin: 50px auto;
+    width: 100%;
+}
+
+#products > .col-md-4 {
+    margin-top: 50px;
+}
+
+.card {
+    padding: 25px;
+}
+
+.card-img {
+    display: block;
+    margin: 25px auto;
+}
+
+.card-title {
+    font-weight: bold;
+    font-size: 120%;
+}
+
+.card-text {
+    min-height: 75px;
+}
+
+.card-subtitle {
+    font-size: 90%;
+    font-style: italic;
+}
+
+.card > button {
+    display: block;
+    margin: 25px auto;
+    width: 80%
+}
+
+footer {
+    background-color: #343a40!important;
+}
+
+footer p {
+    color: rgba(255, 255, 255, .5);
+    padding: 15px;
+}

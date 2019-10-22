@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Twitter</h1>
+                <img src="http://placehold.it/800x150" alt="Banner" class="banner">
+            </div> <!-- ends col 12 -->
+        </div> <!-- ends row -->
+
+    <div class="row" id="products">
+        {% for p in products %}
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="http://placehold.it/250x250" alt="{{ p.title }}" class="card-img">
+                    <div class="card-title">{{ p.title }}</div>
+                    <div class="card-subtitle">${{ p.price }}</div>
+                    <div class="card-text">
+                        <p>{{ p.desc }}</p>
+                    </div>
+                    <button onClick="console.log({{ p.id }})" class="btn btn-primary">Add to Cart</button>
+                </div> <!-- ends card -->
+            </div> <!-- ends col 4-->
+        {% endfor %}
+    </div>
+
+    </div> <!-- ends container -->
+
+{% endblock %}
