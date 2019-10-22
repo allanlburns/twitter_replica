@@ -5,7 +5,11 @@
 
         <div class="row">
             <div class="col-md-12">
-                <h1>Twitter</h1>
+                {% if word == '' %}
+                    <h1>Twitter</h1>
+                {% else %}
+                    <h1>{{ word.title() }}</h1>
+                {% endif %}
                 <img src="http://placehold.it/800x150" alt="Banner" class="banner">
             </div> <!-- ends col 12 -->
         </div> <!-- ends row -->
