@@ -1,7 +1,8 @@
 from app import app, db
 from flask import render_template, url_for, redirect, flash
 from app.forms import TitleForm, ContactForm, LoginForm, RegisterForm, PostForm
-from app.models import Post
+from app.models import Post, User
+from flask_login import login_user, logout_user, login_required, current_user
 
 @app.route('/')
 @app.route('/index')
@@ -75,9 +76,24 @@ def register():
     form = RegisterForm()
 
     if form.validate_on_submit():
-        flash(f"You have been registered.")
+        user = User(
+            first_name = form.first_name.data,
+            last_name = form.last_name.data,
+            username = form.username.data,
+            email = form.email.data,
+            age = form.age.data,
+            bio = form.bio.data,
+        )
 
-        return redirect(url_for('index'))
+        # include password
+        user.set_password(form.password.data)
+
+        # add to stage and commit
+        db.session.add(user)
+        db.session.commit()
+
+        flash(f"You have been registered.")
+        return redirect(url_for('login'))
 
     return render_template('form.html', form=form, title='Register')
 
@@ -88,40 +104,22 @@ def profile(username=''):
     if not username:
         return redirect(url_for('login'))
     form = PostForm()
-    people = [
-        {
-            'id' : 1,
-            'first_name' : 'John',
-            'last_name' : ' Jingle',
-            'username' : 'heimerschmidt',
-            'bio' : 'His name is my name too.',
-            'age' : 180
-        },
-        {
-            'id' : 2,
-            'first_name' : 'Max',
-            'last_name' : 'Smith',
-            'username' : 'maxsmith',
-            'bio' : 'I\'m sure Max has a bio, too.',
-            'age' : 180
-        }
-    ]
 
-    for p in people:
-        if p['username'] == username:
-            person = p
-            break
-
-    tweets = Post.query.all()
+    person = User.query.filter_by(username=username).first()
 
     if form.validate_on_submit():
 
         tweet = form.tweet.data
-        post = Post(user_id=person['id'], tweet=tweet)
+        post = Post(user_id=person.id, tweet=tweet)
 
         db.session.add(post)
         db.session.commit()
 
         return redirect(url_for('profile', username=username))
 
-    return render_template('profile.html', title='Profile', person=person, tweets=tweets, form=form)
+    return render_template('profile.html', title='Profile', person=person, form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
