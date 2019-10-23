@@ -1,0 +1,33 @@
+{% import 'bootstrap/wtf.html' as wtf %}
+{% extends 'base.html' %}
+
+{% block app_content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <img src="http://placehold.it/250x250" alt="Profile Picture" class="card-img">
+                <div class="card-title">{{ person.first_name }} {{ person.last_name }}</div>
+                <div class="card-subtitle">@{{ person.username }}</div>
+                <div class="card-text">
+                    <p>{{ person.bio }}</p>
+                </div>
+                <button onClick="alert('{{ person.id }}')" class="btn btn-primary">Follow</button>
+            </div>
+        </div> <!-- ends col 4 -->
+        <div class="col-md-8" id="posts">
+            <div class="card">
+                {{ wtf.quick_form(form) }}
+            </div>
+            {% for post in tweets %}
+                <div class="card">
+                    <img src="http://placehold.it/30x30" alt="Thumbnail Picture" class='prof-thumb-pic'>
+                    <p class="card-subtitle">{{ post.date_posted }}</p>
+                    <p class="card-subtitle">{{ post.username }}</p>
+                    <h4>{{ post.tweet }}</h4>
+                </div> <!-- ends card for tweet -->
+            {% endfor %}
+        </div> <!-- ends col 8 for tweets -->
+    </div> <!-- ends row -->
+</div><!-- ends container -->
+{% endblock %}

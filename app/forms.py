@@ -1,6 +1,10 @@
 from flask_wtf import FlaskForm # imports mixin
 from wtforms import StringField, SubmitField, TextAreaField, PasswordField, IntegerField
-from wtforms.validators import DataRequired, Email, EqualTo
+from wtforms.validators import DataRequired, Email, EqualTo, length
+
+class PostForm(FlaskForm):
+    tweet = StringField('What are you doing?', validators=[DataRequired(), length(max=140)])
+    submit = SubmitField('Tweet')
 
 class TitleForm(FlaskForm):
     title = StringField('Enter a new header', validators=[DataRequired()])
