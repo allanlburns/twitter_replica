@@ -1,6 +1,7 @@
 from app import app
 from flask import render_template, url_for, redirect, flash
 from app.forms import TitleForm, ContactForm, LoginForm, RegisterForm, PostForm
+from app.models import Post
 
 @app.route('/')
 @app.route('/index')
@@ -80,45 +81,43 @@ def register():
 
     return render_template('form.html', form=form, title='Register')
 
-@app.route('/profile', methods=['GET', 'POST'])
-def profile():
+@app.route('profile')
+@app.route('/profile/<username>', methods=['GET', 'POST'])
+def profile(username=''):
+    # if username is empty
+    if not username:
+        return redirect(url_for('login'))
     form = PostForm()
-    person = {
-        'first_name' : 'John',
-        'last_name' : ' Jingle',
-        'username' : 'heimerschmidt',
-        'bio' : 'His name is my name too.',
-        'age' : 180
-    }
-    tweets = [
+    people = [
         {
             'id' : 1,
-            'tweet' : 'Who is stealing my name?',
-            'date_posted' : '10/23/2019',
-            'username' : 'heimerschmidt'
+            'first_name' : 'John',
+            'last_name' : ' Jingle',
+            'username' : 'heimerschmidt',
+            'bio' : 'His name is my name too.',
+            'age' : 180
         },
         {
             'id' : 2,
-            'tweet' : 'My name is John Jacob Jingle heimerschmidt',
-            'date_posted' : '10/05/2019',
-            'username' : 'johnsmith'
-        },
-        {
-            'id' : 3,
-            'tweet' : 'Maybe this year, no one will steal my name.',
-            'date_posted' : '01/01/2019',
-            'username' : 'heimerschmidt'
+            'first_name' : 'Max',
+            'last_name' : 'Smith',
+            'username' : 'maxsmith',
+            'bio' : 'I\'m sure Max has a bio, too.',
+            'age' : 180
         }
     ]
 
-    if form.validate_on_submit():
-        tweets.insert(0, {
-                    'id' : len(tweets) + 1,
-                    'tweet' : form.tweet.data,
-                    'date_posted' : '10/23/2019',
-                    'username' : 'sample'
-                })
+    for p in people:
+        if p['username'] == username:
+            person = p
+            break
 
-        return render_template('profile.html', title='Profile', person=person, tweets=tweets, form=form)
-        # return redirect(url_for('profile'))
+    tweets = Post.query.all()
+
+    if form.validate_on_submit():
+
+        # tweet = form.form.tweet.data
+
+        return redirect(url_for('profile'))
+
     return render_template('profile.html', title='Profile', person=person, tweets=tweets, form=form)

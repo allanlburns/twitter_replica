@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from config import Config
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
@@ -13,5 +15,9 @@ bootstrap = Bootstrap(app)
 
 # this loads all the config attributes into app
 app.config.from_object(Config)
+
+# set up db variables
+db = SQLAlchemy(app) # takes in app instance to know which variables to use
+migrate = Migrate(app, db)
 
 from app import routes
