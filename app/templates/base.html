@@ -41,37 +41,45 @@
             <a class="nav-link" href="{{ url_for('title')}}">Title</a>
           </li>
 
-          {% if title == 'Profile' %}
-              <li class="nav-item active">
-          {% else %}
-              <li class="nav-item">
-          {% endif %}
-            <a class="nav-link" href="{{ url_for('profile', username='maxsmith')}}">Profile</a>
-          </li>
+          {% if current_user.is_authenticated %}
+              {% if title == 'Profile' %}
+                  <li class="nav-item active">
+              {% else %}
+                  <li class="nav-item">
+              {% endif %}
+                <a class="nav-link" href="{{ url_for('profile', username=current_user.username)}}">Profile</a>
+              </li>
 
-          {% if title == 'Login' %}
-              <li class="nav-item active">
-          {% else %}
               <li class="nav-item">
-          {% endif %}
-            <a class="nav-link" href="{{ url_for('login')}}">Login</a>
-          </li>
+                <a class="nav-link" href="{{ url_for('logout')}}">Logout</a>
+              </li>
 
-          {% if title == 'Register' %}
-              <li class="nav-item active">
           {% else %}
-              <li class="nav-item">
-          {% endif %}
-            <a class="nav-link" href="{{ url_for('register')}}">Register</a>
-          </li>
 
-          {% if title == 'Contact Us' %}
-              <li class="nav-item active">
-          {% else %}
-              <li class="nav-item">
+              {% if title == 'Login' %}
+                  <li class="nav-item active">
+              {% else %}
+                  <li class="nav-item">
+              {% endif %}
+                <a class="nav-link" href="{{ url_for('login')}}">Login</a>
+              </li>
+
+              {% if title == 'Register' %}
+                  <li class="nav-item active">
+              {% else %}
+                  <li class="nav-item">
+              {% endif %}
+                <a class="nav-link" href="{{ url_for('register')}}">Register</a>
+              </li>
+
+              {% if title == 'Contact Us' %}
+                  <li class="nav-item active">
+              {% else %}
+                  <li class="nav-item">
+              {% endif %}
+                <a class="nav-link" href="{{ url_for('contact')}}">Contact</a>
+              </li>
           {% endif %}
-            <a class="nav-link" href="{{ url_for('contact')}}">Contact</a>
-          </li>
 
         </ul>
       </div>

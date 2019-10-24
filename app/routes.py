@@ -1,7 +1,7 @@
 from app import app, db
 from flask import render_template, url_for, redirect, flash
 from app.forms import TitleForm, ContactForm, LoginForm, RegisterForm, PostForm
-from app.models import Post, User
+from app.models import Post, User, Contact
 from flask_login import login_user, logout_user, login_required, current_user
 
 @app.route('/')
@@ -50,29 +50,66 @@ def title():
     return render_template('form.html', title="Title", form=form)
 
 @app.route('/contact', methods={'GET', 'POST'})
+# @app.route('/contact/<contacts>', methods={'GET', 'POST'})
 def contact():
     form = ContactForm()
 
     if form.validate_on_submit():
         flash(f"Thanks {form.name.data}, your message has been received. We have sent a copy of the submission to {form.email.data}.")
 
-        return redirect(url_for('index'))
+        contact = Contact(
+            name = form.name.data,
+            email = form.email.data,
+            message = form.message.data
+        )
+
+        # add to stage and commit
+        db.session.add(contact)
+        db.session.commit()
+
+        # contacts = Contact.query.all()
+        contacts = Contact.query.all()
+
+        return redirect(url_for('contact', contacts=contacts))
 
     return render_template('form.html', form=form, title='Contact Us')
 
+
+
+
+
+
+
+
+
 @app.route('/login', methods={'GET', 'POST'})
 def login():
+
     form = LoginForm()
 
     if form.validate_on_submit():
-        flash(f"You have been logged in.")
+        # qurey the db for the user information and log them in if everything is valid.
+        user = User.query.filter_by(email=form.email.data).first()
 
-        return redirect(url_for('index'))
+        # if user doesn't exsit, reload page and flash message
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid credentials')
+            return redirect(url_for('login'))
+
+        #if user exists and credentials are correct, log them in
+        login_user(user)
+        flash(f"You have been logged in.")
+        return redirect(url_for('profile', username=current_user.username))
 
     return render_template('form.html', form=form, title='Login')
 
 @app.route('/register', methods={'GET', 'POST'})
 def register():
+    # if user is already logged in , redirect them.
+    if current_user.is_authenticated:
+        flash("you are already logged in")
+        return redirect(url_for('profile', username=current_user.username))
+
     form = RegisterForm()
 
     if form.validate_on_submit():
@@ -110,7 +147,7 @@ def profile(username=''):
     if form.validate_on_submit():
 
         tweet = form.tweet.data
-        post = Post(user_id=person.id, tweet=tweet)
+        post = Post(user_id=current_user.id, tweet=tweet)
 
         db.session.add(post)
         db.session.commit()

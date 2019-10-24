@@ -16,9 +16,12 @@
             </div>
         </div> <!-- ends col 4 -->
         <div class="col-md-8" id="posts">
+            {% if person.username == current_user.username %}
             <div class="card">
                 {{ wtf.quick_form(form) }}
             </div>
+            {% endif %}
+
             {% for post in person.posts[::-1] %}
                     <div class="card">
                         <img src="http://placehold.it/30x30" alt="Thumbnail Picture" class='prof-thumb-pic'>

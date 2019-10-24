@@ -23,8 +23,11 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-
-
+class Contact(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+    email = db.Column(db.String(120)) # Probably shouldn't be unique to allow multiple messages from same person/email.
+    message = db.Column(db.String(1000))
 
 class Post(db.Model):
     # attributes corrolate to columns

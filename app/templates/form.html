@@ -8,6 +8,14 @@
                 <h1>{{ title }}</h1>
                 {{ wtf.quick_form(form) }}
             </div> <!--  ends col -->
+            <div class="col-md-4">
+                {% if contacts %}
+                    {% for contact in contacts %}
+                        <p>{{ contact.name }}{{  contact.email }}</p>
+                        <p>{{ contact.message }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div> <!--  ends col -->
         </div> <!--  ends row -->
     </div><!--  ends container -->
 
